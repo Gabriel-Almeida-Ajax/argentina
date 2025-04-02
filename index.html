@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Argentina</title>
+
+    <!-- Leaflet CSS (sem integrity) -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #0f0f0f;
+        color: white;
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      h1 {
+        font-size: 40px;
+        margin-bottom: 5px;
+      }
+
+      .subtitulo {
+        color: #aaa;
+        margin-bottom: 20px;
+      }
+      .clima {
+        background-color: #1c1c1c;
+        border-radius: 10px;
+        padding: 15px;
+        height: fit-content;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      @media (min-width: 768px) {
+        .grid {
+          grid-template-columns: 1.5fr 1fr 1fr;
+        }
+      }
+
+      .card {
+        background-color: #1c1c1c;
+        border-radius: 10px;
+        overflow: hidden;
+        padding: 15px;
+        height: 500px;
+      }
+
+      .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .info-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        color: #ccc;
+      }
+
+      .info-item {
+        text-align: center;
+      }
+
+      .small-text {
+        font-size: 14px;
+        color: #aaa;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+      }
+
+      a {
+        color: #a8cfff;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      a:hover {
+        color: #d2e4ff;
+      }
+
+      /* Carrossel */
+      .carousel-container {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .carousel-slide {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      .carousel-slide img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+      }
+
+      .carousel-buttons {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+        padding: 0 15px;
+      }
+
+      .carousel-buttons button {
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: white;
+        font-size: 24px;
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .carousel-buttons button:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="grid">
+        <div class="clima">
+          <h1>Argentina</h1>
+          <p class="subtitulo">País da América do Sul</p>
+          <h3>
+            <a
+              href="https://www.google.com/search?q=clima+Buenos+Aires"
+              target="_blank"
+              >Clima</a
+            >
+          </h3>
+          <div class="info-group">
+            <div class="info-item">
+              <p>Ter.</p>
+              <p>☀️ 19°</p>
+            </div>
+            <div class="info-item">
+              <p>Qua.</p>
+              <p>☀️ 23°</p>
+            </div>
+            <div class="info-item">
+              <p>Qui.</p>
+              <p>☀️ 22°</p>
+            </div>
+          </div>
+
+          <hr style="margin: 15px 0; border: 0; border-top: 1px solid #333" />
+
+          <h3>
+            <a
+              href="https://www.google.com/travel/flights?q=voos+de+S%C3%A3o+Paulo+para+Buenos+Aires"
+              target="_blank"
+              >Como chegar</a
+            >
+          </h3>
+          <p>✈️ R$ 1.471+</p>
+          <p class="small-text">3h 5 min saindo de São Paulo</p>
+        </div>
+        <!-- Clima + Como chegar -->
+
+        <!-- Imagem Principal -->
+        <div class="card">
+          <div class="carousel-container">
+            <div class="carousel-slide" id="carouselSlide">
+              <img
+                src="https://storage.googleapis.com/travel-web-app-1.appspot.com/flamelink/media/Lagoon%20de%20los%20tres.jpg?GoogleAccessId=firebase-adminsdk-g2s60%40travel-web-app-1.iam.gserviceaccount.com&Expires=16725225600&Signature=KSKT1Z9Plzx4xntbILreKFoiST7%2FBpnWeKWkNKW2VvbgUepokhdVV3iZ4X%2FPGdp28BQCAwf%2F4B%2FSze%2Ff5O7b4%2B3ihXaQRECv7BH4xke%2B65NMXNjT0UO%2Fjk%2F2HqSoPIbv7uws8VAwLOq46a%2F0d3tQ7gaI57mxcpm2l6er99iWsuLJmt1PsPlxBKh%2FsqYY11cPAbSGMyr742S6wtdGcOm1DeRZqEvs9KjXHxyOHHXYbjfPRCkK9Q8xXRyWTVP2%2BSmfbhb5Nrw1MrwSD%2FYwoiUD1ShfpykuTVQiN6RlAPHega25bfhP%2BTTC4peoIKGQlhgQndM4npxFjJvoIhFFgfYKiA%3D%3D"
+                alt="Patagônia"
+              />
+              <img
+                src="https://imgmd.net/images/v1/guia/2918117/centro-civico.jpg"
+                alt="Bariloche"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Spegazzini_Glacier_Parque_Nacional_Los_Glaciares_Patagonia_Argentina_Luca_Galuzzi_2005.JPG/1200px-Spegazzini_Glacier_Parque_Nacional_Los_Glaciares_Patagonia_Argentina_Luca_Galuzzi_2005.JPG"
+                alt="Perito Moreno"
+              />
+            </div>
+            <div class="carousel-buttons">
+              <button id="prevBtn">&#10094;</button>
+              <button id="nextBtn">&#10095;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mapa com Leaflet -->
+        <div class="card">
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaflet JS (sem integrity) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      const map = L.map("map").setView([-38.4161, -63.6167], 4);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+        map
+      );
+      map.zoomControl.remove();
+      map.attributionControl.remove();
+      map.scrollWheelZoom.disable();
+      map.dragging.disable();
+    </script>
+
+    <!-- Carrossel JS -->
+    <script>
+      const carouselSlide = document.getElementById("carouselSlide");
+      const images = carouselSlide.querySelectorAll("img");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      let counter = 0;
+
+      function updateSlide() {
+        const size = images[0].clientWidth;
+        carouselSlide.style.transform = "translateX(" + -counter * size + "px)";
+      }
+
+      nextBtn.addEventListener("click", () => {
+        counter = (counter + 1) % images.length;
+        updateSlide();
+      });
+
+      prevBtn.addEventListener("click", () => {
+        counter = (counter - 1 + images.length) % images.length;
+        updateSlide();
+      });
+
+      setInterval(() => {
+        counter = (counter + 1) % images.length;
+        updateSlide();
+      }, 5000);
+
+      window.addEventListener("resize", updateSlide);
+    </script>
+  </body>
+</html>
