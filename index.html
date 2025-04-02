@@ -220,12 +220,13 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
       const map = L.map("map").setView([-38.4161, -63.6167], 4);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+      L.tileLayer("https://www.google.cn/maps/vt?lyrs=y@189&gl=cn&x={x}&y={y}&z={z}").addTo(
         map
       );
       map.zoomControl.remove();
       map.attributionControl.remove();
       map.scrollWheelZoom.disable();
+      map.doubleClickZoom.disable();
       map.dragging.disable();
     </script>
 
